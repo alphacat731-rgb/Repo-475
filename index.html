@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ef">
+  <meta name="description" content="A calm, private daily planner for small wins, focused work, and better routines.">
+  <title>Daymark — make today count</title>
+  <style>
+    :root{color-scheme:light;--paper:#f6f4ef;--card:#fffefa;--ink:#22251f;--muted:#77796f;--line:#e9e6dc;--green:#4c704f;--green-dark:#35513a;--green-pale:#e7eee3;--orange:#e9a45e;--orange-pale:#fbefe0;--lav:#ebe8f5;--shadow:0 12px 36px rgba(45,49,37,.055);--radius:22px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #9cb99c;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.45}
+    .shell{max-width:1200px;padding:28px 30px 56px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:35px}.brand{display:flex;align-items:center;gap:11px;font-size:15px;font-weight:800;letter-spacing:.12em}.brand-mark{width:36px;height:36px;border-radius:13px;background:var(--green);display:grid;place-items:center;color:white;box-shadow:0 5px 12px #35513a25}.brand-mark svg{width:21px;height:21px}.top-actions{display:flex;gap:9px;align-items:center}.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:9px 14px;color:var(--muted);font-size:12px;font-weight:650}.quiet-button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:12px;padding:9px 12px;font-size:12px;font-weight:700;transition:background .2s}.quiet-button:hover{background:#ebe8df}
+    .intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:27px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;color:var(--green);font-size:10px;font-weight:850;margin:0 0 10px}.intro h1{font-size:clamp(32px,5vw,48px);letter-spacing:-.055em;line-height:1.08;margin:0;font-weight:780}.intro p.sub{color:var(--muted);font-size:14px;margin:12px 0 0}.date-card{text-align:right;min-width:150px}.date-day{font-size:12px;color:var(--muted);margin-bottom:4px}.date-date{font-size:16px;font-weight:750;letter-spacing:-.02em}
+    .layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,.85fr);gap:18px;align-items:start}.stack{display:grid;gap:18px;min-width:0}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:23px}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.card-title{font-size:16px;font-weight:780;letter-spacing:-.025em;margin:0}.card-desc{font-size:12px;color:var(--muted);margin:5px 0 0}.count{background:var(--green-pale);color:var(--green-dark);font-size:11px;font-weight:800;padding:6px 9px;border-radius:99px;white-space:nowrap}
+    .task-progress{margin:21px 0 19px}.progress-top{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-bottom:9px}.progress-top strong{color:var(--green-dark)}.progress-track{height:6px;border-radius:99px;background:#eeece5;overflow:hidden}.progress-fill{height:100%;width:0;border-radius:99px;background:var(--green);transition:width .4s cubic-bezier(.2,.8,.2,1)}
+    .task-entry{display:flex;gap:9px;margin-bottom:19px}.task-entry input{flex:1;min-width:0;border:1px solid var(--line);background:#fbfaf6;border-radius:13px;padding:12px 13px;color:var(--ink);font-size:13px}.task-entry input::placeholder{color:#a2a196}.primary-button{border:0;background:var(--green);color:white;border-radius:13px;padding:0 17px;font-size:12px;font-weight:780;transition:transform .15s,background .15s}.primary-button:hover{background:var(--green-dark);transform:translateY(-1px)}.task-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.filters{display:flex;gap:4px;background:#f2f0e9;border-radius:11px;padding:4px}.filter{border:0;background:transparent;border-radius:8px;padding:7px 10px;color:var(--muted);font-size:11px;font-weight:750}.filter[aria-pressed="true"]{background:white;color:var(--ink);box-shadow:0 1px 4px #20251a10}.text-button{border:0;background:none;color:var(--muted);font-size:11px;font-weight:700;padding:8px 2px}.text-button:hover{color:var(--green-dark)}
+    .task-list{display:grid;gap:6px}.task-row{display:flex;align-items:center;gap:11px;padding:12px 9px;border-radius:13px;border:1px solid transparent;transition:background .15s,border-color .15s;animation:arrive .22s ease both}.task-row:hover{background:#fbfaf6;border-color:#f0eee6}.check{width:19px;height:19px;flex:0 0 19px;border:1.6px solid #c9cabe;border-radius:7px;display:grid;place-items:center;background:transparent;color:white;padding:0;transition:all .2s}.check svg{width:12px;height:12px;opacity:0;transform:scale(.65);transition:all .18s}.task-row.is-done .check{background:var(--green);border-color:var(--green)}.task-row.is-done .check svg{opacity:1;transform:scale(1)}.task-label{flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere;transition:color .2s}.task-row.is-done .task-label{color:#9b9c92;text-decoration:line-through;text-decoration-color:#c4c5b9}.task-meta{font-size:10px;color:#9b9c92;white-space:nowrap}.delete-task{border:0;background:transparent;color:#9b9c92;width:25px;height:25px;border-radius:8px;font-size:18px;opacity:0;transition:opacity .15s,background .15s}.task-row:hover .delete-task,.delete-task:focus-visible{opacity:1}.delete-task:hover{background:#f7e8e4;color:#a64a3e}
+    .empty-state{text-align:center;padding:31px 12px 24px;color:var(--muted)}.empty-icon{width:48px;height:48px;border-radius:16px;background:var(--green-pale);display:grid;place-items:center;margin:0 auto 11px;color:var(--green);font-size:21px}.empty-state strong{display:block;color:var(--ink);font-size:13px;margin-bottom:4px}.empty-state span{font-size:12px}
+    .timer-card{background:#e9eee5;border-color:#dfe6da;overflow:hidden;position:relative}.timer-card:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #d5dfd0;border-radius:50%;right:-84px;top:-91px;pointer-events:none}.timer-card .eyebrow{color:var(--green-dark)}.timer-display{display:flex;flex-direction:column;align-items:center;padding:25px 0 18px}.timer-ring{--progress:100%;width:164px;height:164px;display:grid;place-items:center;border-radius:50%;background:conic-gradient(var(--green) var(--progress),#d6e0d1 0);position:relative;box-shadow:0 9px 25px #43654616}.timer-ring:before{content:"";position:absolute;inset:8px;background:#e9eee5;border-radius:50%}.timer-inner{position:relative;text-align:center}.timer-time{font-size:39px;letter-spacing:-.06em;font-weight:780;font-variant-numeric:tabular-nums;line-height:1.1}.timer-status{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--green-dark);font-weight:800;margin-top:7px}.timer-buttons{display:flex;justify-content:center;gap:8px}.timer-buttons .primary-button{padding:12px 20px;border-radius:12px}.timer-buttons .quiet-button{border-color:#cfd9c9;background:#f5f7f2}.timer-foot{display:flex;justify-content:center;gap:17px;color:var(--green-dark);font-size:11px;margin-top:17px}.timer-foot strong{font-weight:850}
+    .habits-card{padding-bottom:17px}.habit-progress-label{font-size:11px;color:var(--muted);white-space:nowrap}.habit-list{display:grid;gap:5px;margin-top:16px}.habit-row{display:flex;align-items:center;gap:11px;padding:11px 9px;border-radius:12px;transition:background .15s}.habit-row:hover{background:#fbfaf6}.habit-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:16px;flex-shrink:0}.habit-copy{flex:1;min-width:0}.habit-name{font-size:12px;font-weight:720}.habit-hint{font-size:10px;color:var(--muted);margin-top:2px}.habit-toggle{width:23px;height:23px;border-radius:8px;border:1.5px solid #d4d4c9;background:transparent;display:grid;place-items:center;padding:0;color:white;flex-shrink:0}.habit-toggle svg{width:14px;height:14px;opacity:0}.habit-row.is-done .habit-toggle{background:var(--green);border-color:var(--green)}.habit-row.is-done .habit-toggle svg{opacity:1}.habit-row.is-done .habit-name{color:#888d82}
+    .note-card{background:#f7eee2;border-color:#f0e4d4}.note-card .eyebrow{color:#a76f39}.note-card textarea{width:100%;min-height:112px;resize:vertical;border:0;outline:0;background:transparent;color:var(--ink);font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.55;padding:17px 0 6px}.note-card textarea::placeholder{color:#b5a28d}.note-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ecdfcf;padding-top:12px;font-size:10px;color:#9e8d78}.saved-state{display:flex;align-items:center;gap:5px}.saved-dot{height:6px;width:6px;border-radius:50%;background:#7c9a70}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:17px}.stat-box{background:#f7f6f0;border:1px solid #efede4;border-radius:14px;padding:13px 12px}.stat-number{font-size:23px;font-weight:800;letter-spacing:-.055em}.stat-label{font-size:10px;color:var(--muted);margin-top:3px}.footer{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#99998f;font-size:10px;padding:22px 3px 0}.footer-brand{font-weight:850;letter-spacing:.12em;color:#77796f}.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,18px);opacity:0;pointer-events:none;background:#252a23;color:white;border-radius:12px;padding:12px 17px;font-size:12px;font-weight:650;box-shadow:0 12px 40px #1113;transition:all .24s;z-index:10;max-width:calc(100vw - 30px);text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}.confetti{position:fixed;width:7px;height:10px;border-radius:2px;pointer-events:none;z-index:11;animation:fall 850ms ease-out forwards}@keyframes arrive{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}@keyframes fall{to{transform:translate(var(--drift),85px) rotate(230deg);opacity:0}}@media(max-width:820px){.shell{padding:21px 18px 42px}.layout{grid-template-columns:minmax(0,1fr) minmax(260px,.85fr);gap:13px}.card{padding:19px}.stack{gap:13px}.intro{margin-bottom:22px}.task-entry{gap:7px}.primary-button{padding:0 13px}.timer-ring{width:146px;height:146px}.timer-time{font-size:35px}}@media(max-width:650px){.shell{padding:17px 14px 30px}.topbar{margin-bottom:28px}.pill{display:none}.intro{align-items:flex-start;flex-direction:column;gap:13px}.date-card{text-align:left;display:flex;align-items:center;gap:8px}.date-day{margin:0}.date-date{font-size:12px}.intro h1{font-size:35px}.intro p.sub{font-size:13px;margin-top:9px}.layout{grid-template-columns:1fr;gap:14px}.stack{gap:14px}.left-stack{order:1}.right-stack{order:2}.card{padding:19px;border-radius:19px}.timer-card{padding-bottom:19px}.timer-display{padding:20px 0 15px}.timer-ring{width:158px;height:158px}.task-row{padding:12px 6px}.delete-task{opacity:.8}.footer{align-items:flex-start;flex-direction:column;gap:7px;padding-top:19px}.stats-grid{gap:7px}.stat-box{padding:11px 9px}.stat-number{font-size:21px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.64 5.64l1.42 1.42M16.94 16.94l1.42 1.42M18.36 5.64l-1.42 1.42M7.06 16.94l-1.42 1.42"/><circle cx="12" cy="12" r="5"/></svg></div>
+        <span>DAYMARK</span>
+      </div>
+      <div class="top-actions">
+        <span class="pill" id="privacy-pill">🔒 Your data stays here</span>
+        <button class="quiet-button" id="export-button" type="button">Export backup ↗</button>
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="greeting">
+      <div>
+        <p class="eyebrow">A little progress, every day</p>
+        <h1 id="greeting">Make today count.</h1>
+        <p class="sub">You don't have to do it all. Just the next right thing.</p>
+      </div>
+      <div class="date-card">
+        <div class="date-day" id="weekday"></div>
+        <div class="date-date" id="long-date"></div>
+      </div>
+    </section>
+
+    <main class="layout">
+      <div class="stack left-stack">
+        <section class="card" aria-labelledby="tasks-title">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title" id="tasks-title">Today's focus</h2>
+              <p class="card-desc">Make room for what matters.</p>
+            </div>
+            <span class="count" id="task-count">0 tasks</span>
+          </div>
+          <div class="task-progress">
+            <div class="progress-top"><span id="progress-message">Every journey starts somewhere.</span><strong id="progress-percent">0%</strong></div>
+            <div class="progress-track" role="progressbar" id="task-progress" aria-label="Daily task progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progress-fill"></div></div>
+          </div>
+          <form class="task-entry" id="task-form">
+            <input id="task-input" maxlength="180" autocomplete="off" aria-label="A task to add" placeholder="What's one thing you want to do?">
+            <button class="primary-button" type="submit">+ Add task</button>
+          </form>
+          <div class="task-tools">
+            <div class="filters" aria-label="Filter tasks">
+              <button class="filter" data-filter="all" aria-pressed="true" type="button">All</button>
+              <button class="filter" data-filter="active" aria-pressed="false" type="button">To do</button>
+              <button class="filter" data-filter="done" aria-pressed="false" type="button">Done</button>
+            </div>
+            <button class="text-button" id="clear-done" type="button">Clear completed</button>
+          </div>
+          <div class="task-list" id="task-list" aria-live="polite"></div>
+        </section>
+
+        <section class="card note-card" aria-labelledby="note-title">
+          <div class="card-head">
+            <div>
+              <p class="eyebrow">A moment for yourself</p>
+              <h2 class="card-title" id="note-title">Daily note</h2>
+              <p class="card-desc">A thought, a win, or a reminder for later.</p>
+            </div>
+            <span aria-hidden="true" style="font-size:24px">✎</span>
+          </div>
+          <textarea id="daily-note" maxlength="3000" aria-label="Your daily note" placeholder="Today, I'd like to remember…"></textarea>
+          <div class="note-foot"><span>Just for you. No account, no cloud.</span><span class="saved-state" id="note-state"><span class="saved-dot"></span> Saved on this device</span></div>
+        </section>
+      </div>
+
+      <aside class="stack right-stack">
+        <section class="card timer-card" aria-labelledby="timer-title">
+          <div class="card-head">
+            <div>
+              <p class="eyebrow">One thing at a time</p>
+              <h2 class="card-title" id="timer-title">Focus room</h2>
+              <p class="card-desc">A little quiet time goes a long way.</p>
+            </div>
+            <span aria-hidden="true" style="font-size:21px">◷</span>
+          </div>
+          <div class="timer-display">
+            <div class="timer-ring" id="timer-ring" style="--progress:100%" role="timer" aria-label="25 minutes remaining">
+              <div class="timer-inner"><div class="timer-time" id="timer-time">25:00</div><div class="timer-status" id="timer-status">Ready when you are</div></div>
+            </div>
+          </div>
+          <div class="timer-buttons">
+            <button class="primary-button" id="timer-start" type="button">Start focus</button>
+            <button class="quiet-button" id="timer-reset" type="button">Reset</button>
+          </div>
+          <div class="timer-foot"><span>✦ <strong id="focus-count">0</strong> sessions today</span><span><strong>25 min</strong> per session</span></div>
+        </section>
+
+        <section class="card habits-card" aria-labelledby="habits-title">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title" id="habits-title">Gentle habits</h2>
+              <p class="card-desc">Small things that add up.</p>
+            </div>
+            <span class="habit-progress-label" id="habit-progress-label">0 of 4</span>
+          </div>
+          <div class="progress-track" style="margin-top:16px"><div class="progress-fill" id="habit-progress-fill"></div></div>
+          <div class="habit-list" id="habit-list"></div>
+        </section>
+
+        <section class="card" aria-labelledby="stats-title">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title" id="stats-title">The little things add up</h2>
+              <p class="card-desc">Your progress, not anyone else's.</p>
+            </div>
+            <span aria-hidden="true" style="font-size:19px">↗</span>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-box"><div class="stat-number" id="stat-done">0</div><div class="stat-label">Tasks done</div></div>
+            <div class="stat-box"><div class="stat-number" id="stat-minutes">0</div><div class="stat-label">Focus minutes</div></div>
+            <div class="stat-box"><div class="stat-number" id="stat-streak">0</div><div class="stat-label">Day streak 🔥</div></div>
+          </div>
+        </section>
+      </aside>
+    </main>
+    <footer class="footer"><span><span class="footer-brand">DAYMARK</span> · Built for progress, not perfection.</span><span id="footer-message">One small win is still a win.</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      "use strict";
+      var STORAGE_KEY = "daymark.data.v1";
+      var FOCUS_SECONDS = 25 * 60;
+      var HABITS = [
+        {id:"water",name:"Drink some water",hint:"Look after the basics",icon:"💧",bg:"#e4edf5"},
+        {id:"move",name:"Move your body",hint:"A stretch counts, too",icon:"🌿",bg:"#e6eee0"},
+        {id:"read",name:"Read a little",hint:"Even five minutes is fine",icon:"📖",bg:"#f6eadb"},
+        {id:"reset",name:"Reset your space",hint:"Make future-you's life easier",icon:"✨",bg:"#ede7f5"}
+      ];
+      var today = localDateKey(new Date());
+      var data = loadData();
+      var filter = "all";
+      var timerRemaining = FOCUS_SECONDS;
+      var timerStartedAt = 0;
+      var timerInterval = null;
+      var timerRunning = false;
+      var toastTimeout = null;
+      var noteTimeout = null;
+      var $ = function (id) { return document.getElementById(id); };
+      var checkSvg = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>';
+
+      function localDateKey(date) {
+        return date.getFullYear() + "-" + String(date.getMonth()+1).padStart(2,"0") + "-" + String(date.getDate()).padStart(2,"0");
+      }
+      function emptyData() { return {tasks:[],habits:{},notes:{},focus:{},activity:{}}; }
+      function loadData() {
+        try {
+          var parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+          if (!parsed || typeof parsed !== "object") return emptyData();
+          return {
+            tasks:Array.isArray(parsed.tasks) ? parsed.tasks.filter(function(t){return t && typeof t.id==="string" && typeof t.text==="string";}) : [],
+            habits:parsed.habits && typeof parsed.habits==="object" ? parsed.habits : {},
+            notes:parsed.notes && typeof parsed.notes==="object" ? parsed.notes : {},
+            focus:parsed.focus && typeof parsed.focus==="object" ? parsed.focus : {},
+            activity:parsed.activity && typeof parsed.activity==="object" ? parsed.activity : {}
+          };
+        } catch (err) { return emptyData(); }
+      }
+      function saveData() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+        catch (err) { showToast("Couldn't save — browser storage may be full."); }
+      }
+      function markActivity() { data.activity[today] = true; saveData(); }
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});
+      }
+      function dateLabel() {
+        var d = new Date();
+        $("weekday").textContent = new Intl.DateTimeFormat(undefined,{weekday:"long"}).format(d);
+        $("long-date").textContent = new Intl.DateTimeFormat(undefined,{month:"long",day:"numeric",year:"numeric"}).format(d);
+      }
+      function tasksForToday() {
+        return data.tasks.filter(function(t){return t.date <= today && (!t.done || t.completedAt === today);});
+      }
+      function renderTasks() {
+        var all = tasksForToday();
+        var done = all.filter(function(t){return t.done;}).length;
+        var active = all.length - done;
+        var percent = all.length ? Math.round(done/all.length*100) : 0;
+        $("task-count").textContent = active + " left";
+        $("progress-percent").textContent = percent + "%";
+        $("progress-fill").style.width = percent + "%";
+        $("task-progress").setAttribute("aria-valuenow",String(percent));
+        $("progress-message").textContent = all.length === 0 ? "A fresh page. A fresh start." : percent === 100 ? "Look at you. You did the thing!" : done ? done + (done===1?" little win":" little wins") + " down. Keep going." : "Every journey starts somewhere.";
+        $("clear-done").disabled = done === 0;
+        document.querySelectorAll("[data-filter]").forEach(function(btn){btn.setAttribute("aria-pressed",btn.getAttribute("data-filter")===filter?"true":"false");});
+        var visible = all.filter(function(t){return filter==="all" || (filter==="active"&&!t.done) || (filter==="done"&&t.done);});
+        if (!visible.length) {
+          var title = filter==="done" ? "No completed tasks yet" : filter==="active" ? "You're all caught up" : "Nothing on the list. Yet.";
+          var message = filter==="done" ? "Finish a task and it will show up here." : filter==="active" ? "Take a breath. Or add another small win." : "Add one small thing and get the ball rolling.";
+          $("task-list").innerHTML = '<div class="empty-state"><div class="empty-icon">' + (filter==="active" && all.length ? "☀" : "＋") + '</div><strong>' + title + '</strong><span>' + message + '</span></div>';
+          return;
+        }
+        $("task-list").innerHTML = visible.map(function(t){
+          return '<div class="task-row' + (t.done?' is-done':'') + '" data-task="' + escapeHtml(t.id) + '">' +
+            '<button class="check" type="button" aria-label="' + (t.done?'Mark incomplete':'Complete task') + ': ' + escapeHtml(t.text) + '" aria-pressed="' + String(!!t.done) + '">' + checkSvg + '</button>' +
+            '<span class="task-label">' + escapeHtml(t.text) + '</span>' +
+            (t.date < today && !t.done ? '<span class="task-meta">carried over</span>' : '') +
+            '<button class="delete-task" type="button" aria-label="Delete task: ' + escapeHtml(t.text) + '" title="Delete task">×</button></div>';
+        }).join("");
+      }
+      function renderHabits() {
+        var day = data.habits[today] || {};
+        var doneCount = HABITS.filter(function(h){return !!day[h.id];}).length;
+        $("habit-progress-label").textContent = doneCount + " of " + HABITS.length;
+        $("habit-progress-fill").style.width = (doneCount/HABITS.length*100) + "%";
+        $("habit-list").innerHTML = HABITS.map(function(h){
+          var done = !!day[h.id];
+          return '<div class="habit-row' + (done?' is-done':'') + '" data-habit="' + h.id + '">' +
+            '<div class="habit-icon" style="background:' + h.bg + '">' + h.icon + '</div>' +
+            '<div class="habit-copy"><div class="habit-name">' + h.name + '</div><div class="habit-hint">' + h.hint + '</div></div>' +
+            '<button class="habit-toggle" type="button" aria-label="' + (done?'Uncheck':'Complete') + ' habit: ' + h.name + '" aria-pressed="' + String(done) + '">' + checkSvg + '</button></div>';
+        }).join("");
+      }
+      function streakCount() {
+        var cursor = new Date();
+        if (!data.activity[today]) cursor.setDate(cursor.getDate()-1);
+        var count = 0;
+        for (var i=0;i<366;i++) {
+          var key = localDateKey(cursor);
+          if (!data.activity[key]) break;
+          count++;
+          cursor.setDate(cursor.getDate()-1);
+        }
+        return count;
+      }
+      function renderStats() {
+        var doneToday = data.tasks.filter(function(t){return t.done && t.completedAt===today;}).length;
+        var focusToday = Number(data.focus[today] || 0);
+        $("focus-count").textContent = focusToday;
+        $("stat-done").textContent = doneToday;
+        $("stat-minutes").textContent = focusToday * 25;
+        $("stat-streak").textContent = streakCount();
+      }
+      function renderAll() {
+        dateLabel();
+        $("daily-note").value = typeof data.notes[today] === "string" ? data.notes[today] : "";
+        renderTasks();
+        renderHabits();
+        renderStats();
+      }
+      function showToast(message) {
+        var toast = $("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(function(){toast.classList.remove("show");},2400);
+      }
+      function celebrate() {
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        var colors = ["#4c704f","#e9a45e","#8b83b9","#d7b9a0"];
+        for (var i=0;i<16;i++) {
+          var piece = document.createElement("span");
+          piece.className = "confetti";
+          piece.style.left = (45 + Math.random()*10) + "vw";
+          piece.style.top = (window.innerHeight*.64 + Math.random()*18) + "px";
+          piece.style.background = colors[i%colors.length];
+          piece.style.setProperty("--drift",((Math.random()-.5)*220)+"px");
+          document.body.appendChild(piece);
+          setTimeout((function(el){return function(){el.remove();};})(piece),1000);
+        }
+      }
+      $("task-form").addEventListener("submit",function(event){
+        event.preventDefault();
+        var input = $("task-input");
+        var text = input.value.trim();
+        if (!text) { input.focus(); return; }
+        if (text.length > 180) { showToast("Keep each task under 180 characters."); return; }
+        data.tasks.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),text:text,date:today,done:false,completedAt:null});
+        markActivity(); input.value=""; renderTasks(); renderStats(); input.focus();
+        showToast("Added. One step at a time ✨");
+      });
+      $("task-list").addEventListener("click",function(event){
+        var row = event.target.closest("[data-task]");
+        if (!row) return;
+        var id = row.getAttribute("data-task");
+        var task = data.tasks.find(function(t){return t.id===id;});
+        if (!task) return;
+        if (event.target.closest(".delete-task")) {
+          data.tasks = data.tasks.filter(function(t){return t.id!==id;});
+          saveData(); renderTasks(); renderStats(); showToast("Task removed."); return;
+        }
+        if (event.target.closest(".check")) {
+          task.done = !task.done;
+          task.completedAt = task.done ? today : null;
+          if (task.done) { markActivity(); showToast("A little win. Nicely done!"); }
+          else saveData();
+          renderTasks(); renderStats();
+          if (task.done && tasksForToday().length && tasksForToday().every(function(t){return t.done;})) { celebrate(); showToast("Everything on the list is done. Take that win."); }
+        }
+      });
+      document.querySelectorAll("[data-filter]").forEach(function(btn){
+        btn.addEventListener("click",function(){filter=btn.getAttribute("data-filter");renderTasks();});
+      });
+      $("clear-done").addEventListener("click",function(){
+        var before = data.tasks.length;
+        data.tasks = data.tasks.filter(function(t){return !(t.done && t.completedAt===today);});
+        saveData(); renderTasks(); renderStats();
+        if (before !== data.tasks.length) showToast("Cleared today's completed tasks.");
+      });
+      $("habit-list").addEventListener("click",function(event){
+        var row = event.target.closest("[data-habit]");
+        if (!row || !event.target.closest(".habit-toggle")) return;
+        var id = row.getAttribute("data-habit");
+        if (!data.habits[today]) data.habits[today] = {};
+        data.habits[today][id] = !data.habits[today][id];
+        if (data.habits[today][id]) markActivity(); else saveData();
+        renderHabits(); renderStats();
+        if (HABITS.every(function(h){return data.habits[today][h.id];})) { celebrate(); showToast("All four habits. You're taking care of yourself."); }
+      });
+      $("daily-note").addEventListener("input",function(){
+        $("note-state").innerHTML = '<span class="saved-dot" style="background:#d39a4e"></span> Saving…';
+        clearTimeout(noteTimeout);
+        noteTimeout=setTimeout(function(){
+          data.notes[today]=$("daily-note").value;
+          saveData();
+          $("note-state").innerHTML = '<span class="saved-dot"></span> Saved on this device';
+        },280);
+      });
+      function renderTimer() {
+        var mins = Math.floor(timerRemaining/60);
+        var secs = timerRemaining%60;
+        $("timer-time").textContent = String(mins).padStart(2,"0")+":"+String(secs).padStart(2,"0");
+        var progress = Math.max(0,Math.min(100,timerRemaining/FOCUS_SECONDS*100));
+        $("timer-ring").style.setProperty("--progress",progress+"%");
+        $("timer-ring").setAttribute("aria-label",mins+" minutes and "+secs+" seconds remaining");
+        $("timer-start").textContent = timerRunning ? "Pause session" : timerRemaining===FOCUS_SECONDS ? "Start focus" : timerRemaining===0 ? "Start again" : "Resume focus";
+        $("timer-status").textContent = timerRunning ? "You're in the zone" : timerRemaining===0 ? "Session complete" : timerRemaining===FOCUS_SECONDS ? "Ready when you are" : "Paused for a moment";
+      }
+      function finishFocus() {
+        clearInterval(timerInterval); timerInterval=null; timerRunning=false; timerRemaining=0;
+        data.focus[today]=Number(data.focus[today]||0)+1;
+        markActivity(); renderTimer(); renderStats(); celebrate(); showToast("Focus session complete. Go enjoy a proper break. 🌿");
+        try {
+          if ("Notification" in window && Notification.permission==="granted" && document.hidden) new Notification("Focus session complete",{body:"You did your 25 minutes. Take a little break."});
+        } catch (err) {}
+      }
+      function tickTimer() {
+        if (!timerRunning) return;
+        var elapsed = Math.floor((Date.now()-timerStartedAt)/1000);
+        timerRemaining = Math.max(0,FOCUS_SECONDS-elapsed);
+        renderTimer();
+        if (timerRemaining<=0) finishFocus();
+      }
+      $("timer-start").addEventListener("click",function(){
+        if (timerRunning) {
+          tickTimer();
+          if (!timerRunning) return;
+          timerRunning=false; clearInterval(timerInterval); timerInterval=null; renderTimer(); return;
+        }
+        if (timerRemaining===0) timerRemaining=FOCUS_SECONDS;
+        timerStartedAt=Date.now()-(FOCUS_SECONDS-timerRemaining)*1000;
+        timerRunning=true; timerInterval=setInterval(tickTimer,250); renderTimer();
+      });
+      $("timer-reset").addEventListener("click",function(){
+        clearInterval(timerInterval); timerInterval=null; timerRunning=false; timerRemaining=FOCUS_SECONDS; renderTimer(); showToast("Fresh start. No rush.");
+      });
+      document.addEventListener("visibilitychange",function(){if(timerRunning) tickTimer();});
+      $("export-button").addEventListener("click",function(){
+        var backup = {app:"Daymark",version:1,exportedAt:new Date().toISOString(),data:data};
+        var blob = new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+        var url = URL.createObjectURL(blob);
+        var anchor = document.createElement("a");
+        anchor.href=url; anchor.download="daymark-backup-"+today+".json";
+        document.body.appendChild(anchor); anchor.click(); anchor.remove();
+        setTimeout(function(){URL.revokeObjectURL(url);},1000);
+        showToast("Your backup is ready. Keep it somewhere safe.");
+      });
+      renderAll();
+      renderTimer();
+      $("privacy-pill").title = "Daymark stores your planner in this browser's local storage. Nothing is sent to a server.";
+    })();
+  </script>
+</body>
+</html>
