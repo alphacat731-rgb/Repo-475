@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6f4ef">
   <meta name="description" content="A calm, private daily planner for small wins, focused work, and better routines.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Daymark — make today count</title>
   <style>
     :root{color-scheme:light;--paper:#f6f4ef;--card:#fffefa;--ink:#22251f;--muted:#77796f;--line:#e9e6dc;--green:#4c704f;--green-dark:#35513a;--green-pale:#e7eee3;--orange:#e9a45e;--orange-pale:#fbefe0;--lav:#ebe8f5;--shadow:0 12px 36px rgba(45,49,37,.055);--radius:22px}
@@ -398,6 +402,13 @@
       renderTimer();
       $("privacy-pill").title = "Daymark stores your planner in this browser's local storage. Nothing is sent to a server.";
     })();
+  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./sw.js").catch(function () {});
+      });
+    }
   </script>
 </body>
 </html>
